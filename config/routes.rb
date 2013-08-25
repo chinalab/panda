@@ -4,9 +4,10 @@ Panda::Application.routes.draw do
   get 'signin' => 'sessions#new', :as => :signin
   get 'signout' => 'sessions#destroy', :as => :signout
 
+
   resources :users
   resources :sessions
-
+  resources :reservations
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
