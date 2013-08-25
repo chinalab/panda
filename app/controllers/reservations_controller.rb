@@ -24,8 +24,23 @@ class ReservationsController < ApplicationController
   # POST /reservations
   # POST /reservations.json
   def create
-    @reservation = Reservation.new(reservation_params)
-
+    @year = params[:date][:year]
+    @month = params[:date][:month]
+    @day = params[:date][:day]
+    current_user = User.find_by(id: session[:user_id])
+    if current_user
+      @reservation = Reservation.new
+      @reservation.user = current_user
+      @reservation.date = Date.today
+      if @reservation.save
+        @message = "Saved successfully"
+      else
+        @message = "Failed"
+      end
+    else
+      @message = "WHAT THE FUCK !? Login first!"
+    end
+=begin
     respond_to do |format|
       if @reservation.save
         format.html { redirect_to @reservation, notice: 'Reservation was successfully created.' }
@@ -35,6 +50,7 @@ class ReservationsController < ApplicationController
         format.json { render json: @reservation.errors, status: :unprocessable_entity }
       end
     end
+=end
   end
 
   # PATCH/PUT /reservations/1
@@ -69,6 +85,6 @@ class ReservationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def reservation_params
-      params[:reservation]
+      params.require(:reservation).permit(:date)
     end
 end
